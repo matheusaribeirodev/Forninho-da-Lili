@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- O painel nunca deve aparecer no Google -->
+<meta name="robots" content="noindex, nofollow">
+<title>Pedidos | Painel Forninho da Lili</title>
+<link rel="icon" href="../assets/img/logo-selo.jpg">
+<link rel="stylesheet" href="../assets/css/estilo.css">
+<link rel="stylesheet" href="assets/admin.css">
+<!-- dados.js = "banco" provisório; admin.js = proteção por login (precisa ficar no head) -->
+<script src="../assets/js/dados.js"></script>
+<script src="assets/admin.js"></script>
+</head>
+<body class="admin-corpo">
+
+<!-- =================== TOPO DO PAINEL (igual em todas as páginas) =================== -->
+<header class="admin-topo">
+  <a class="logo" href="painel.html" aria-label="Painel do Forninho da Lili, visão geral">
+    <img class="logo-selo" src="../assets/img/logo-selo.jpg" alt="" width="44" height="44">
+    <span class="logo-forninho">Forninho</span>
+    <span class="logo-da">da</span>
+    <span class="logo-lili">Lili</span>
+    <span class="logo-papel">Painel</span>
+  </a>
+  <div class="admin-usuario">
+    <span>Olá, <strong data-nome-usuario>Lili</strong></span>
+    <a href="../index.html" target="_blank" rel="noopener">Ver o site</a>
+    <button class="botao botao-mini botao-sair" type="button" data-sair>Sair</button>
+  </div>
+</header>
+
+<div class="admin-app">
+  <div class="painel">
+    <nav class="painel-menu" aria-label="Menu do painel">
+      <a href="painel.html">Visão geral</a>
+      <a class="ativo" href="pedidos.html" aria-current="page">Pedidos</a>
+      <a href="produtos.html">Produtos</a>
+      <a href="clientes.html">Clientes</a>
+    </nav>
+
+    <main class="painel-corpo">
+      <div class="painel-topo">
+        <div>
+          <h1>Pedidos</h1>
+          <p class="subtitulo">Encomendas combinadas pelo WhatsApp.</p>
+        </div>
+        <a class="botao" href="pedido-form.html">+ Novo pedido</a>
+      </div>
+
+      <p data-aviso hidden></p>
+
+      <form class="ferramentas" role="search" onsubmit="return false">
+        <label class="campo-busca">Buscar
+          <input type="search" id="busca" placeholder="Nome do cliente ou nº do pedido">
+        </label>
+        <label>Situação
+          <select id="filtro-status"><option value="">Todas</option><option value="abertos">Em aberto</option></select>
+        </label>
+      </form>
+
+      <div class="bloco" style="margin-top:1rem">
+        <table class="tabela">
+          <thead>
+            <tr><th scope="col">Pedido</th><th scope="col">Data</th><th scope="col">Itens</th><th scope="col">Total</th><th scope="col">Situação</th><th scope="col">Ações</th></tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+      <p class="rodape-tabela" id="contador"></p>
+    </main>
+  </div>
+</div>
+
+<script>
+  var db = LojaDB, esc = db.esc;
+
+  Admin.mostrarAviso({
+    criado: 'Pedido cadastrado!',
+    salvo: 'Pedido atualizado.',
+    excluido: 'Pedido excluído.',
+    status: 'Situação do pedido atualizada.',
+    naoencontrado: { texto: 'Pedido não encontrado.', erro: true }
+  });
+
+  var selStatus = document.getElementById('filtro-status');
+  db.STATUS_PEDIDO.forEach(function (s) { selStatus.add(new Option(s, s)); });
+
+  function desenhar() {
+    var clientes = db.listar('cliente');
+    var produtos = db.listar('produto');
+    var itens = db.listar('pedido_item');
+    var busca = document.getElementById('busca').value.trim().toLowerCase();
+    var st = selStatus.value;
+
+    function nomeCliente(id) { var c = clientes.filter(function (c) { return c.id === id; })[0]; return c ? c.nome : 'Cliente removido'; }
+    function nomeProduto(id) { var p = produtos.filter(function (p) { return p.id === id; })[0]; return p ? p.nome : 'Produto removido'; }
+
+    var lista = db.listar('pedido').filter(function (p) {
+      var texto = ('nº ' + p.id + ' ' + nomeCliente(p.cliente_id)).toLowerCase();
+      var okStatus = !st || (st === 'abertos' ? ['Entregue', 'Cancelado'].indexOf(p.status) === -1 : p.status === st);
+      return okStatus && (!busca || texto.indexOf(busca) !== -1 || String(p.id) === busca);
+    }).sort(function (a, b) { return b.data_pedido.localeCompare(a.data_pedido) || b.id - a.id; });
+
+    var soma = 0;
+    document.getElementById('lista').innerHTML = lista.length ? lista.map(function (p) {
+      var seus = itens.filter(function (i) { return i.pedido_id === p.id; });
+      var total = seus.reduce(function (s, i) { return s + i.quantidade * i.preco_unitario; }, 0);
+      if (p.status !== 'Cancelado') soma += total;
+      var resumo = seus.map(function (i) { return i.quantidade + '× ' + esc(nomeProduto(i.produto_id)); }).join('<br>');
+      var opcoes = db.STATUS_PEDIDO.map(function (s) { return '<option' + (s === p.status ? ' selected' : '') + '>' + s + '</option>'; }).join('');
+      return '<tr>' +
+        '<td class="td-nome"><span><span>Nº ' + p.id + ' · ' + esc(nomeCliente(p.cliente_id)) +
+          '<span class="td-sub">' + esc(p.entrega) + (p.observacao ? ' · ' + esc(p.observacao) : '') + '</span></span></span></td>' +
+        '<td data-rotulo="Data">' + db.dataBr(p.data_pedido) + '</td>' +
+        '<td data-rotulo="Itens" class="td-quebra">' + (resumo || '—') + '</td>' +
+        '<td data-rotulo="Total">' + db.dinheiro(total) + '</td>' +
+        '<td data-rotulo="Situação"><select aria-label="Situação do pedido ' + p.id + '" data-status="' + p.id + '" style="min-width:8.5rem">' + opcoes + '</select></td>' +
+        '<td class="td-acoes">' +
+          '<a class="botao botao-claro botao-mini" href="pedido-form.html?id=' + p.id + '">Editar</a>' +
+          '<button class="botao botao-claro botao-mini" type="button" data-excluir="' + p.id + '">Excluir</button>' +
+        '</td></tr>';
+    }).join('') : '<tr><td class="tabela-vazia" colspan="6">Nenhum pedido encontrado.</td></tr>';
+
+    document.getElementById('contador').innerHTML = lista.length + ' pedido(s) · Total (sem cancelados): <b>' + db.dinheiro(soma) + '</b>';
+  }
+
+  document.getElementById('lista').addEventListener('change', function (e) {
+    var id = e.target.dataset.status;
+    if (!id) return;
+    var p = db.buscar('pedido', id);
+    p.status = e.target.value;
+    db.salvar('pedido', p);
+    var aviso = document.querySelector('[data-aviso]');
+    aviso.className = 'aviso';
+    aviso.textContent = 'Pedido nº ' + p.id + ' agora está como “' + p.status + '”.';
+    aviso.hidden = false;
+  });
+
+  document.getElementById('lista').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-excluir]');
+    if (!b) return;
+    var id = Number(b.dataset.excluir);
+    Admin.confirmar({
+      titulo: 'Excluir o pedido nº ' + id + '?',
+      texto: 'O pedido e os itens dele serão apagados. Se a encomenda só não vai acontecer, prefira mudar a situação para “Cancelado” e manter o histórico.',
+      botao: 'Sim, excluir', perigo: true
+    }).then(function (ok) {
+      if (!ok) return;
+      db.excluirOnde('pedido_item', 'pedido_id', id);
+      db.excluir('pedido', id);
+      window.location.href = 'pedidos.html?msg=excluido';
+    });
+  });
+
+  ['busca', 'filtro-status'].forEach(function (id) { document.getElementById(id).addEventListener('input', desenhar); });
+  desenhar();
+</script>
+</body>
+</html>

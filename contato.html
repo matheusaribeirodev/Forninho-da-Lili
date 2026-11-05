@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contato | Forninho da Lili</title>
+<meta name="description" content="Fale com o Forninho da Lili pelo WhatsApp ou envie uma mensagem.">
+<link rel="icon" href="assets/img/logo-selo.jpg">
+<link rel="preload" href="assets/fontes/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fontes/figtree-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body id="inicio">
+
+<div class="progresso" aria-hidden="true"></div>
+
+<p class="faixa-demo">Versão de demonstração: preços são fictícios.</p>
+
+<!-- =================== CABEÇALHO (igual em todas as páginas) =================== -->
+<header class="topo">
+  <div class="conteudo topo-linha">
+    <a class="logo" href="index.html" aria-label="Forninho da Lili, página inicial">
+      <img class="logo-selo" src="assets/img/logo-selo.jpg" alt="" width="44" height="44">
+      <span class="logo-forninho">Forninho</span>
+      <span class="logo-da">da</span>
+      <span class="logo-lili">Lili</span>
+    </a>
+    <nav class="menu" aria-label="Menu principal">
+      <ul>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="contato.html" aria-current="page">Contato</a></li>
+      </ul>
+    </nav>
+    <a class="botao botao-claro botao-mini" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Vim%20pelo%20site%20do%20Forninho%20da%20Lili." target="_blank" rel="noopener">Encomendar</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- =================== CONTATO =================== -->
+  <section class="secao contato" id="contato" aria-labelledby="titulo-contato">
+    <div class="conteudo contato-grade">
+      <div>
+        <h1 class="titulo-pagina" id="titulo-contato">Contato</h1>
+        <dl class="dados-contato">
+          <div><dt>WhatsApp de atendimento</dt><dd><a href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Vim%20pelo%20site%20do%20Forninho%20da%20Lili." target="_blank" rel="noopener">(11) 98963-4843</a></dd></div>
+          <div><dt>Horários de atendimento</dt><dd><span class="a-confirmar">a confirmar</span></dd></div>
+          <div><dt>Redes sociais</dt><dd>Instagram: <span class="a-confirmar">perfil a confirmar</span></dd></div>
+        </dl>
+        <a class="botao botao-principal" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Vim%20pelo%20site%20do%20Forninho%20da%20Lili." target="_blank" rel="noopener">Chamar no WhatsApp</a>
+      </div>
+      <form class="formulario" action="contato.html" aria-labelledby="titulo-mensagem">
+        <h3 id="titulo-mensagem">Envie uma mensagem</h3>
+        <label>Nome <input type="text" name="nome" autocomplete="name"></label>
+        <label>Telefone <input type="tel" name="telefone" autocomplete="tel"></label>
+        <label>Mensagem <textarea name="mensagem"></textarea></label>
+        <button class="botao" type="button" aria-disabled="true">Enviar mensagem</button>
+        <p class="nota">Campo demonstrativo: nesta versão, nenhuma mensagem é enviada.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- =================== RODAPÉ (igual em todas as páginas) =================== -->
+<footer class="rodape">
+  <div class="conteudo rodape-grade">
+    <div class="rodape-marca">
+      <a class="logo" href="index.html" aria-label="Forninho da Lili, página inicial">
+        <span class="logo-forninho">Forninho</span>
+        <span class="logo-da">da</span>
+        <span class="logo-lili">Lili</span>
+      </a>
+      <p>Doces artesanais feitos sob encomenda. Adoçando a vida com amor!</p>
+    </div>
+    <div>
+      <h2>Navegação</h2>
+      <ul>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="index.html#encomendas">Como encomendar</a></li>
+        <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Atendimento</h2>
+      <ul>
+        <li><a href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Vim%20pelo%20site%20do%20Forninho%20da%20Lili." target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="contato.html">Envie uma mensagem</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="conteudo rodape-legal">
+    <p>© <span data-ano>2026</span> Forninho da Lili. Todos os direitos reservados.</p>
+    <p>Se você tem alergia ou restrição alimentar, confirme os ingredientes no momento da encomenda.</p>
+    <p>Esboço visual para aprovação. Preços são fictícios. Produtos sem foto real aparecem com um espaço reservado.</p>
+  </div>
+</footer>
+
+</body>
+</html>

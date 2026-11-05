@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- O painel nunca deve aparecer no Google -->
+<meta name="robots" content="noindex, nofollow">
+<title>Produto | Painel Forninho da Lili</title>
+<link rel="icon" href="../assets/img/logo-selo.jpg">
+<link rel="stylesheet" href="../assets/css/estilo.css">
+<link rel="stylesheet" href="assets/admin.css">
+<!-- dados.js = "banco" provisório; admin.js = proteção por login (precisa ficar no head) -->
+<script src="../assets/js/dados.js"></script>
+<script src="assets/admin.js"></script>
+</head>
+<body class="admin-corpo">
+
+<!-- =================== TOPO DO PAINEL (igual em todas as páginas) =================== -->
+<header class="admin-topo">
+  <a class="logo" href="painel.html" aria-label="Painel do Forninho da Lili, visão geral">
+    <img class="logo-selo" src="../assets/img/logo-selo.jpg" alt="" width="44" height="44">
+    <span class="logo-forninho">Forninho</span>
+    <span class="logo-da">da</span>
+    <span class="logo-lili">Lili</span>
+    <span class="logo-papel">Painel</span>
+  </a>
+  <div class="admin-usuario">
+    <span>Olá, <strong data-nome-usuario>Lili</strong></span>
+    <a href="../index.html" target="_blank" rel="noopener">Ver o site</a>
+    <button class="botao botao-mini botao-sair" type="button" data-sair>Sair</button>
+  </div>
+</header>
+
+<div class="admin-app">
+  <div class="painel">
+    <nav class="painel-menu" aria-label="Menu do painel">
+      <a href="painel.html">Visão geral</a>
+      <a href="pedidos.html">Pedidos</a>
+      <a class="ativo" href="produtos.html" aria-current="page">Produtos</a>
+      <a href="clientes.html">Clientes</a>
+    </nav>
+
+    <main class="painel-corpo">
+      <div class="painel-topo">
+        <div>
+          <h1 id="titulo-form">Novo produto</h1>
+          <p class="subtitulo"><a href="produtos.html">← Voltar para produtos</a></p>
+        </div>
+      </div>
+
+      <p data-aviso hidden></p>
+
+      <!-- Na versão PHP: <form method="post" action="produto_salvar.php" enctype="multipart/form-data"> -->
+      <form class="form-admin" id="form" novalidate>
+        <input type="hidden" name="id">
+        <input type="hidden" name="imagem">
+
+        <div class="campo">
+          <label for="nome">Nome do produto <span class="obrigatorio">*</span></label>
+          <input type="text" id="nome" name="nome" maxlength="80" required>
+        </div>
+
+        <div class="campos-lado">
+          <div class="campo">
+            <label for="categoria">Categoria <span class="obrigatorio">*</span></label>
+            <select id="categoria" name="categoria" required></select>
+          </div>
+          <div class="campo">
+            <label for="preco">Preço (R$)</label>
+            <input type="number" id="preco" name="preco" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 9.50">
+            <span class="dica">Deixe vazio para mostrar “Sob consulta”.</span>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" name="descricao" rows="3" maxlength="240"></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="alergia">Aviso para alérgicos</label>
+          <input type="text" id="alergia" name="alergia" maxlength="120" placeholder="Ex.: Contém glúten, leite e ovos.">
+        </div>
+
+        <fieldset>
+          <legend>Foto</legend>
+          <div class="foto-campo">
+            <div id="previa" class="previa previa-vazia">Sem foto</div>
+            <div class="campo">
+              <label for="arquivo">Enviar foto do computador ou celular</label>
+              <input type="file" id="arquivo" accept="image/*">
+              <span class="dica">A foto é cortada no formato quadrado, como no cardápio.</span>
+              <label for="caminho" style="margin-top:.5rem">…ou caminho / link da imagem</label>
+              <input type="text" id="caminho" placeholder="assets/img/produtos/nome.jpg">
+              <div><button class="botao botao-claro botao-mini" type="button" id="remover-foto" style="margin-top:.5rem">Remover foto</button></div>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="imagem_alt">Descrição da foto (para leitores de tela)</label>
+            <input type="text" id="imagem_alt" name="imagem_alt" maxlength="160" placeholder="Ex.: Coxinha de morango coberta com granulado">
+          </div>
+        </fieldset>
+
+        <label class="opcao"><input type="checkbox" name="ativo" checked> Mostrar no cardápio do site</label>
+
+        <div class="form-acoes">
+          <button class="botao" type="submit">Salvar produto</button>
+          <a class="botao botao-claro" href="produtos.html">Cancelar</a>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+
+<script>
+  var db = LojaDB;
+  var form = document.getElementById('form');
+  var previa = document.getElementById('previa');
+  var caminho = document.getElementById('caminho');
+
+  db.CATEGORIAS.forEach(function (c) { form.categoria.add(new Option(c.nome, c.id)); });
+
+  // ----- Edição: ?id= na URL -----
+  var id = Admin.param('id');
+  if (id) {
+    var p = db.buscar('produto', id);
+    if (!p) { window.location.replace('produtos.html?msg=naoencontrado'); }
+    else {
+      document.getElementById('titulo-form').textContent = 'Editar produto';
+      document.title = 'Editar produto | Painel Forninho da Lili';
+      form.id.value = p.id;
+      form.nome.value = p.nome;
+      form.categoria.value = p.categoria;
+      form.preco.value = p.preco === null ? '' : p.preco;
+      form.descricao.value = p.descricao || '';
+      form.alergia.value = p.alergia || '';
+      form.imagem_alt.value = p.imagem_alt || '';
+      form.ativo.checked = Number(p.ativo) === 1;
+      definirImagem(p.imagem || '');
+    }
+  }
+
+  function definirImagem(valor) {
+    form.imagem.value = valor;
+    caminho.value = /^data:/.test(valor) ? '' : valor;
+    if (valor) {
+      previa.outerHTML = '<img id="previa" class="previa" alt="Prévia da foto" src="' + db.esc(db.urlImagem(valor, '../')) + '">';
+    } else {
+      previa.outerHTML = '<div id="previa" class="previa previa-vazia">Sem foto</div>';
+    }
+    previa = document.getElementById('previa');
+  }
+
+  caminho.addEventListener('change', function () { definirImagem(caminho.value.trim()); });
+  document.getElementById('remover-foto').addEventListener('click', function () {
+    document.getElementById('arquivo').value = '';
+    definirImagem('');
+  });
+
+  // ----- Foto enviada: corta em quadrado e reduz para 800px -----
+  // (Na versão PHP o arquivo vai para assets/img/produtos/ com move_uploaded_file)
+  document.getElementById('arquivo').addEventListener('change', function (e) {
+    var arquivo = e.target.files[0];
+    if (!arquivo) return;
+    if (!/^image\//.test(arquivo.type)) { alert('Escolha um arquivo de imagem.'); return; }
+    var img = new Image();
+    img.onload = function () {
+      var lado = Math.min(img.width, img.height);
+      var tamanho = Math.min(800, lado);
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = tamanho;
+      canvas.getContext('2d').drawImage(img, (img.width - lado) / 2, (img.height - lado) / 2, lado, lado, 0, 0, tamanho, tamanho);
+      definirImagem(canvas.toDataURL('image/jpeg', 0.8));
+      URL.revokeObjectURL(img.src);
+    };
+    img.src = URL.createObjectURL(arquivo);
+  });
+
+  // ----- Salvar (INSERT ou UPDATE) -----
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var aviso = document.querySelector('[data-aviso]');
+    var nome = form.nome.value.trim();
+    var preco = form.preco.value.trim();
+    var erros = [];
+    if (!nome) erros.push('Informe o nome do produto.');
+    if (preco !== '' && (isNaN(Number(preco)) || Number(preco) < 0)) erros.push('O preço precisa ser um número positivo.');
+    if (erros.length) {
+      aviso.className = 'aviso aviso-erro';
+      aviso.textContent = erros.join(' ');
+      aviso.hidden = false;
+      (nome ? form.preco : form.nome).focus();
+      return;
+    }
+    var produto = {
+      id: form.id.value ? Number(form.id.value) : null,
+      nome: nome,
+      categoria: form.categoria.value,
+      preco: preco === '' ? null : Math.round(Number(preco) * 100) / 100,
+      descricao: form.descricao.value.trim(),
+      alergia: form.alergia.value.trim(),
+      imagem: form.imagem.value,
+      imagem_alt: form.imagem_alt.value.trim(),
+      ativo: form.ativo.checked ? 1 : 0
+    };
+    try {
+      db.salvar('produto', produto);
+    } catch (erro) {
+      aviso.className = 'aviso aviso-erro';
+      aviso.textContent = 'Não foi possível salvar: a foto é grande demais para a demonstração no navegador. Tente uma foto menor ou use um caminho de imagem.';
+      aviso.hidden = false;
+      return;
+    }
+    window.location.href = 'produtos.html?msg=' + (produto.id ? 'salvo' : 'criado');
+  });
+</script>
+</body>
+</html>

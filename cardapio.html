@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio | Forninho da Lili</title>
+<meta name="description" content="Cardápio do Forninho da Lili: docinhos, cookies e kits de presente feitos sob encomenda.">
+<link rel="icon" href="assets/img/logo-selo.jpg">
+<link rel="preload" href="assets/fontes/fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fontes/figtree-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body id="inicio">
+
+<div class="progresso" aria-hidden="true"></div>
+
+<p class="faixa-demo">Versão de demonstração: preços são fictícios.</p>
+
+<!-- =================== CABEÇALHO (igual em todas as páginas) =================== -->
+<header class="topo">
+  <div class="conteudo topo-linha">
+    <a class="logo" href="index.html" aria-label="Forninho da Lili, página inicial">
+      <img class="logo-selo" src="assets/img/logo-selo.jpg" alt="" width="44" height="44">
+      <span class="logo-forninho">Forninho</span>
+      <span class="logo-da">da</span>
+      <span class="logo-lili">Lili</span>
+    </a>
+    <nav class="menu" aria-label="Menu principal">
+      <ul>
+        <li><a href="cardapio.html" aria-current="page">Cardápio</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </nav>
+    <a class="botao botao-claro botao-mini" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Vim%20pelo%20site%20do%20Forninho%20da%20Lili." target="_blank" rel="noopener">Encomendar</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- =================== CARDÁPIO =================== -->
+  <section class="secao" id="cardapio" aria-labelledby="titulo-cardapio">
+    <div class="conteudo">
+      <h1 class="titulo-pagina" id="titulo-cardapio">Cardápio</h1>
+      <p class="intro">Escolha seu doce e faça a encomenda direto pelo WhatsApp.</p>
+      <p class="nota">Preços e avisos de alérgicos são exemplos até a confirmação da Lili.</p>
+
+      <!-- Filtro de categorias feito só com CSS. Os quatro inputs precisam ficar aqui, antes de .filtros e .grupos. -->
+      <input class="filtro-radio" type="radio" name="categoria" id="f-todos" checked>
+      <input class="filtro-radio" type="radio" name="categoria" id="f-docinhos">
+      <input class="filtro-radio" type="radio" name="categoria" id="f-cookies">
+      <input class="filtro-radio" type="radio" name="categoria" id="f-kits">
+
+      <div class="filtros" role="group" aria-label="Filtrar por categoria">
+        <label for="f-todos">Todos</label>
+        <label for="f-docinhos">Docinhos</label>
+        <label for="f-cookies">Cookies</label>
+        <label for="f-kits">Kits e presentes</label>
+      </div>
+
+      <!-- Os produtos abaixo são uma cópia de reserva. Ao abrir a página, o arquivo
+           assets/js/cardapio.js troca esta lista pelos produtos ativos cadastrados.
+           Na versão PHP, este trecho será gerado pelo servidor a partir do SQLite. -->
+      <div class="grupos" id="grupos-cardapio">
+
+        <div class="grupo g-docinhos" data-categoria="docinhos">
+          <h3>Docinhos</h3>
+          <div class="lista-produtos">
+
+            <!-- MODELO DE PRODUTO: para criar outro, copie do <article> até </article>.
+                 TROCAR FOTO: troque a div .foto-pendente por <img src="fotos/nome.jpg" alt="Descrição do doce">.
+                 Use fotos quadradas para o cartão ficar alinhado. -->
+            <article class="item">
+              <div class="foto"><img src="assets/img/produtos/coxinha-chocolate.jpg" alt="Coxinha de morango coberta com granulado de chocolate, em forminha de papel branca" width="800" height="800"></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Coxinha de morango de chocolate tradicional</h4>
+                <p class="preco">R$ 9,00</p>
+                <p class="item-descricao">Morango envolvido em brigadeiro e coberto com granulado de chocolate.</p>
+                <p class="alergia">Contém leite.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Coxinha%20de%20morango%20de%20chocolate%20tradicional." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="foto"><img src="assets/img/produtos/coxinha-amendoim.jpg" alt="Coxinha coberta com amendoim e castanhas, com chocolate por cima, em forminha de papel branca" width="800" height="800"></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Coxinha de morango de amendoim e castanhas</h4>
+                <p class="preco">R$ 10,00</p>
+                <p class="item-descricao">Coberta com amendoim e castanhas, com chocolate por cima.</p>
+                <p class="alergia">Contém leite, amendoim e castanhas.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Coxinha%20de%20morango%20de%20amendoim%20e%20castanhas." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="foto"><img src="assets/img/produtos/coxinha-ninho.jpg" alt="Coxinha de ninho com chocolate aplicado por cima, em forminha de papel branca" width="800" height="800"></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Coxinha de ninho com chocolate</h4>
+                <p class="preco">R$ 8,00</p>
+                <p class="item-descricao">Coxinha de ninho com chocolate aplicado à mão.</p>
+                <p class="alergia">Contém glúten, leite e ovos.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Coxinha%20de%20ninho%20com%20chocolate." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="grupo g-cookies" data-categoria="cookies">
+          <h3>Cookies</h3>
+          <div class="lista-produtos">
+
+            <article class="item">
+              <div class="foto"><img src="assets/img/produtos/cookie-doce-de-leite.jpg" alt="Cookie com gotas de chocolate e doce de leite por cima, em embalagem transparente" width="800" height="800"></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Cookie com doce de leite</h4>
+                <p class="preco">R$ 12,00</p>
+                <p class="item-descricao">Cookie com gotas de chocolate e doce de leite por cima.</p>
+                <p class="alergia">Contém glúten, leite e ovos.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Cookie%20com%20doce%20de%20leite." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="foto"><div class="foto-pendente"><img src="assets/img/logo-selo.jpg" alt="" width="56" height="56">Foto em breve</div></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Cookie com gotas de chocolate</h4>
+                <p class="preco">R$ 10,00</p>
+                <p class="item-descricao">A versão clássica, com bastante gota de chocolate.</p>
+                <p class="alergia">Contém glúten, leite e ovos.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Cookie%20com%20gotas%20de%20chocolate." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="grupo g-kits" data-categoria="kits">
+          <h3>Kits e presentes</h3>
+          <div class="lista-produtos">
+
+            <article class="item">
+              <div class="foto"><div class="foto-pendente"><img src="assets/img/logo-selo.jpg" alt="" width="56" height="56">Foto em breve</div></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Kit presente com 4 doces</h4>
+                <p class="preco">R$ 38,00</p>
+                <p class="item-descricao">Uma caixinha delicada para surpreender alguém especial.</p>
+                <p class="alergia">Contém glúten, leite e ovos.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Kit%20presente%20com%204%20doces." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="foto"><div class="foto-pendente"><img src="assets/img/logo-selo.jpg" alt="" width="56" height="56">Foto em breve</div></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Kit colegas de trabalho com 12 doces</h4>
+                <p class="preco">R$ 98,00</p>
+                <p class="item-descricao">Doces sortidos para dividir com a equipe.</p>
+                <p class="alergia">Contém glúten, leite e ovos.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Kit%20colegas%20de%20trabalho%20com%2012%20doces." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="foto"><div class="foto-pendente"><img src="assets/img/logo-selo.jpg" alt="" width="56" height="56">Foto em breve</div></div>
+              <div class="item-corpo">
+                <h4 class="nome-produto">Kit personalizado</h4>
+                <p class="preco">Sob consulta</p>
+                <p class="item-descricao">Você conta a ocasião e a Lili monta o kit com os doces escolhidos.</p>
+                <p class="alergia">Alérgicos variam conforme os doces escolhidos.</p>
+                <a class="botao" href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Gostaria%20de%20encomendar%3A%20Kit%20personalizado." target="_blank" rel="noopener">Encomendar via WhatsApp</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =================== RODAPÉ (igual em todas as páginas) =================== -->
+<footer class="rodape">
+  <div class="conteudo rodape-grade">
+    <div class="rodape-marca">
+      <a class="logo" href="index.html" aria-label="Forninho da Lili, página inicial">
+        <span class="logo-forninho">Forninho</span>
+        <span class="logo-da">da</span>
+        <span class="logo-lili">Lili</span>
+      </a>
+      <p>Doces artesanais feitos sob encomenda. Adoçando a vida com amor!</p>
+    </div>
+    <div>
+      <h2>Navegação</h2>
+      <ul>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="index.html#encomendas">Como encomendar</a></li>
+        <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Atendimento</h2>
+      <ul>
+        <li><a href="https://wa.me/5511989634843?text=Ol%C3%A1%21%20Vim%20pelo%20site%20do%20Forninho%20da%20Lili." target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="contato.html">Envie uma mensagem</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="conteudo rodape-legal">
+    <p>© <span data-ano>2026</span> Forninho da Lili. Todos os direitos reservados.</p>
+    <p>Se você tem alergia ou restrição alimentar, confirme os ingredientes no momento da encomenda.</p>
+    <p>Esboço visual para aprovação. Preços são fictícios. Produtos sem foto real aparecem com um espaço reservado.</p>
+  </div>
+</footer>
+<script src="assets/js/dados.js"></script>
+<script src="assets/js/cardapio.js"></script>
+
+</body>
+</html>
