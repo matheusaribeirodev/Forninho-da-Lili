@@ -195,8 +195,8 @@ Projeto desenvolvido no curso de **Análise e Desenvolvimento de Sistemas — SE
 |---|---|
 | Matheus Augusto Ribeiro | [@matheusaribeirodev](https://github.com/matheusaribeirodev) |
 | Joãpo Silva Torres | [@Joaotorresdev](https://https://github.com/joaotorresdev)|
-| [Nome 3] | [@usuario] |
-| [Nome 4] | [@usuario] |
+| Luis Felipe Neto | [@luisneto016](https://github.com/luisneto016) |
+| Gustavo Pereira | [@Pereira06z](https://github.com/Pereira06z) |
 
 ---
 
