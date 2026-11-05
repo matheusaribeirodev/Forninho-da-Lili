@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- O painel nunca deve aparecer no Google -->
+<meta name="robots" content="noindex, nofollow">
+<title>Clientes | Painel Forninho da Lili</title>
+<link rel="icon" href="../assets/img/logo-selo.jpg">
+<link rel="stylesheet" href="../assets/css/estilo.css">
+<link rel="stylesheet" href="assets/admin.css">
+<!-- dados.js = "banco" provisório; admin.js = proteção por login (precisa ficar no head) -->
+<script src="../assets/js/dados.js"></script>
+<script src="assets/admin.js"></script>
+</head>
+<body class="admin-corpo">
+
+<!-- =================== TOPO DO PAINEL (igual em todas as páginas) =================== -->
+<header class="admin-topo">
+  <a class="logo" href="painel.html" aria-label="Painel do Forninho da Lili, visão geral">
+    <img class="logo-selo" src="../assets/img/logo-selo.jpg" alt="" width="44" height="44">
+    <span class="logo-forninho">Forninho</span>
+    <span class="logo-da">da</span>
+    <span class="logo-lili">Lili</span>
+    <span class="logo-papel">Painel</span>
+  </a>
+  <div class="admin-usuario">
+    <span>Olá, <strong data-nome-usuario>Lili</strong></span>
+    <a href="../index.html" target="_blank" rel="noopener">Ver o site</a>
+    <button class="botao botao-mini botao-sair" type="button" data-sair>Sair</button>
+  </div>
+</header>
+
+<div class="admin-app">
+  <div class="painel">
+    <nav class="painel-menu" aria-label="Menu do painel">
+      <a href="painel.html">Visão geral</a>
+      <a href="pedidos.html">Pedidos</a>
+      <a href="produtos.html">Produtos</a>
+      <a class="ativo" href="clientes.html" aria-current="page">Clientes</a>
+    </nav>
+
+    <main class="painel-corpo">
+      <div class="painel-topo">
+        <div>
+          <h1>Clientes</h1>
+          <p class="subtitulo">Quem já encomendou com a Lili.</p>
+        </div>
+        <a class="botao" href="cliente-form.html">+ Novo cliente</a>
+      </div>
+
+      <p data-aviso hidden></p>
+
+      <form class="ferramentas" role="search" onsubmit="return false">
+        <label class="campo-busca">Buscar
+          <input type="search" id="busca" placeholder="Nome, telefone ou cidade">
+        </label>
+      </form>
+
+      <div class="bloco" style="margin-top:1rem">
+        <table class="tabela">
+          <thead>
+            <tr><th scope="col">Cliente</th><th scope="col">Telefone</th><th scope="col">Cidade</th><th scope="col">Pedidos</th><th scope="col">Ações</th></tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+      <p class="rodape-tabela" id="contador"></p>
+    </main>
+  </div>
+</div>
+
+<script>
+  var db = LojaDB, esc = db.esc;
+
+  Admin.mostrarAviso({
+    criado: 'Cliente cadastrado!',
+    salvo: 'Dados do cliente atualizados.',
+    excluido: 'Cliente excluído.',
+    naoencontrado: { texto: 'Cliente não encontrado.', erro: true }
+  });
+
+  function pedidosDo(id) { return db.listar('pedido').filter(function (p) { return p.cliente_id === id; }).length; }
+
+  function desenhar() {
+    var busca = document.getElementById('busca').value.trim().toLowerCase();
+    var todos = db.listar('cliente');
+    var lista = todos.filter(function (c) {
+      return !busca || [c.nome, c.telefone, c.cidade, c.email].join(' ').toLowerCase().indexOf(busca) !== -1;
+    }).sort(function (a, b) { return a.nome.localeCompare(b.nome); });
+
+    document.getElementById('lista').innerHTML = lista.length ? lista.map(function (c) {
+      var fone = (c.telefone || '').replace(/\D/g, '');
+      return '<tr>' +
+        '<td class="td-nome"><span><span>' + esc(c.nome) + (c.email ? '<span class="td-sub">' + esc(c.email) + '</span>' : '') + '</span></span></td>' +
+        '<td data-rotulo="Telefone">' + (fone ? '<a href="https://wa.me/55' + fone + '" target="_blank" rel="noopener">' + esc(c.telefone) + '</a>' : '—') + '</td>' +
+        '<td data-rotulo="Cidade">' + (esc(c.cidade) || '—') + '</td>' +
+        '<td data-rotulo="Pedidos">' + pedidosDo(c.id) + '</td>' +
+        '<td class="td-acoes">' +
+          '<a class="botao botao-claro botao-mini" href="cliente-form.html?id=' + c.id + '">Editar</a>' +
+          '<a class="botao botao-claro botao-mini" href="pedido-form.html?cliente=' + c.id + '">Novo pedido</a>' +
+          '<button class="botao botao-claro botao-mini" type="button" data-excluir="' + c.id + '">Excluir</button>' +
+        '</td></tr>';
+    }).join('') : '<tr><td class="tabela-vazia" colspan="5">Nenhum cliente encontrado.</td></tr>';
+    document.getElementById('contador').textContent = todos.length + ' cliente(s) cadastrado(s).';
+  }
+
+  document.getElementById('lista').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-excluir]');
+    if (!b) return;
+    var c = db.buscar('cliente', b.dataset.excluir);
+    var n = pedidosDo(c.id);
+    if (n > 0) {
+      Admin.confirmar({
+        titulo: 'Este cliente não pode ser excluído',
+        html: '<b>' + esc(c.nome) + '</b> tem ' + n + ' pedido(s) registrado(s). Exclua os pedidos primeiro, se realmente quiser apagar o cadastro.'
+      });
+      return;
+    }
+    Admin.confirmar({
+      titulo: 'Excluir cliente?',
+      html: 'Tem certeza que deseja excluir <b>' + esc(c.nome) + '</b>?',
+      botao: 'Sim, excluir', perigo: true
+    }).then(function (ok) {
+      if (ok) { db.excluir('cliente', c.id); window.location.href = 'clientes.html?msg=excluido'; }
+    });
+  });
+
+  document.getElementById('busca').addEventListener('input', desenhar);
+  desenhar();
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- O painel nunca deve aparecer no Google -->
+<meta name="robots" content="noindex, nofollow">
+<title>Visão geral | Painel Forninho da Lili</title>
+<link rel="icon" href="../assets/img/logo-selo.jpg">
+<link rel="stylesheet" href="../assets/css/estilo.css">
+<link rel="stylesheet" href="assets/admin.css">
+<!-- dados.js = "banco" provisório; admin.js = proteção por login (precisa ficar no head) -->
+<script src="../assets/js/dados.js"></script>
+<script src="assets/admin.js"></script>
+</head>
+<body class="admin-corpo">
+
+<!-- =================== TOPO DO PAINEL (igual em todas as páginas) =================== -->
+<header class="admin-topo">
+  <a class="logo" href="painel.html" aria-label="Painel do Forninho da Lili, visão geral">
+    <img class="logo-selo" src="../assets/img/logo-selo.jpg" alt="" width="44" height="44">
+    <span class="logo-forninho">Forninho</span>
+    <span class="logo-da">da</span>
+    <span class="logo-lili">Lili</span>
+    <span class="logo-papel">Painel</span>
+  </a>
+  <div class="admin-usuario">
+    <span>Olá, <strong data-nome-usuario>Lili</strong></span>
+    <a href="../index.html" target="_blank" rel="noopener">Ver o site</a>
+    <button class="botao botao-mini botao-sair" type="button" data-sair>Sair</button>
+  </div>
+</header>
+
+<div class="admin-app">
+  <div class="painel">
+    <nav class="painel-menu" aria-label="Menu do painel">
+      <a class="ativo" href="painel.html" aria-current="page">Visão geral</a>
+      <a href="pedidos.html">Pedidos</a>
+      <a href="produtos.html">Produtos</a>
+      <a href="clientes.html">Clientes</a>
+    </nav>
+
+    <main class="painel-corpo">
+      <div class="painel-topo">
+        <div>
+          <h1>Painel da Lili</h1>
+          <p class="subtitulo" id="hoje"></p>
+        </div>
+        <div class="painel-topo-acoes">
+          <a class="botao botao-claro" href="pedido-form.html">+ Novo pedido</a>
+          <a class="botao" href="produto-form.html">+ Novo produto</a>
+        </div>
+      </div>
+
+      <dl class="metricas">
+        <div><dt>Pedidos no mês</dt><dd id="m-pedidos">0</dd></div>
+        <div><dt>Itens vendidos no mês</dt><dd id="m-itens">0</dd></div>
+        <div><dt>Faturamento no mês</dt><dd id="m-total">R$ 0,00</dd></div>
+      </dl>
+
+      <div class="painel-grade painel-grade-2">
+        <section class="bloco" aria-labelledby="t-recentes">
+          <div class="bloco-topo">
+            <h2 id="t-recentes">Pedidos recentes</h2>
+            <a href="pedidos.html">Ver todos</a>
+          </div>
+          <table class="tabela">
+            <thead>
+              <tr><th scope="col">Pedido</th><th scope="col">Data</th><th scope="col">Total</th><th scope="col">Situação</th></tr>
+            </thead>
+            <tbody id="lista-recentes"></tbody>
+          </table>
+        </section>
+
+        <section class="bloco" aria-labelledby="t-vendas">
+          <div class="bloco-topo">
+            <h2 id="t-vendas">Vendas por item</h2>
+            <span class="dica">Unidades, sem pedidos cancelados</span>
+          </div>
+          <ul class="barras" id="lista-barras"></ul>
+        </section>
+      </div>
+
+      <section class="bloco" style="margin-top:1.25rem" aria-labelledby="t-cardapio">
+        <div class="bloco-topo">
+          <h2 id="t-cardapio">Cardápio do site</h2>
+          <a href="produtos.html">Gerenciar produtos</a>
+        </div>
+        <p id="resumo-cardapio"></p>
+      </section>
+
+      <div class="zona-demo">
+        <p>Os dados desta demonstração ficam salvos só neste navegador. Para recomeçar a apresentação:</p>
+        <button class="botao botao-claro botao-mini" type="button" id="restaurar">Restaurar dados de exemplo</button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  var db = LojaDB, esc = db.esc;
+
+  var produtos = db.listar('produto');
+  var clientes = db.listar('cliente');
+  var pedidos = db.listar('pedido');
+  var itens = db.listar('pedido_item');
+
+  function totalDoPedido(id) {
+    return itens.filter(function (i) { return i.pedido_id === id; })
+      .reduce(function (s, i) { return s + i.quantidade * i.preco_unitario; }, 0);
+  }
+  function nomeCliente(id) {
+    var c = clientes.filter(function (c) { return c.id === id; })[0];
+    return c ? c.nome : 'Cliente removido';
+  }
+  function classeStatus(s) {
+    return 'status status-' + s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+  }
+
+  var hoje = new Date();
+  document.getElementById('hoje').textContent = hoje.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+  // ----- Métricas do mês (pedidos cancelados não contam) -----
+  var mesAtual = hoje.getFullYear() + '-' + String(hoje.getMonth() + 1).padStart(2, '0'); // AAAA-MM
+  var doMes = pedidos.filter(function (p) { return p.data_pedido.slice(0, 7) === mesAtual && p.status !== 'Cancelado'; });
+  var idsDoMes = doMes.map(function (p) { return p.id; });
+  var itensDoMes = itens.filter(function (i) { return idsDoMes.indexOf(i.pedido_id) !== -1; });
+
+  document.getElementById('m-pedidos').textContent = doMes.length;
+  document.getElementById('m-itens').textContent = itensDoMes.reduce(function (s, i) { return s + i.quantidade; }, 0);
+  document.getElementById('m-total').textContent = db.dinheiro(itensDoMes.reduce(function (s, i) { return s + i.quantidade * i.preco_unitario; }, 0));
+
+  // ----- Pedidos recentes -----
+  var recentes = pedidos.slice().sort(function (a, b) { return b.data_pedido.localeCompare(a.data_pedido) || b.id - a.id; }).slice(0, 5);
+  document.getElementById('lista-recentes').innerHTML = recentes.length ? recentes.map(function (p) {
+    return '<tr>' +
+      '<td class="td-nome"><span><a href="pedido-form.html?id=' + p.id + '">Nº ' + p.id + '</a> · ' + esc(nomeCliente(p.cliente_id)) + '</span></td>' +
+      '<td data-rotulo="Data">' + db.dataBr(p.data_pedido) + '</td>' +
+      '<td data-rotulo="Total">' + db.dinheiro(totalDoPedido(p.id)) + '</td>' +
+      '<td data-rotulo="Situação"><span class="' + classeStatus(p.status) + '">' + esc(p.status) + '</span></td>' +
+      '</tr>';
+  }).join('') : '<tr><td class="tabela-vazia" colspan="4">Nenhum pedido ainda.</td></tr>';
+
+  // ----- Vendas por item (barras) -----
+  var validos = pedidos.filter(function (p) { return p.status !== 'Cancelado'; }).map(function (p) { return p.id; });
+  var porProduto = {};
+  itens.forEach(function (i) {
+    if (validos.indexOf(i.pedido_id) === -1) return;
+    porProduto[i.produto_id] = (porProduto[i.produto_id] || 0) + i.quantidade;
+  });
+  var ranking = Object.keys(porProduto).map(function (id) {
+    var p = produtos.filter(function (p) { return p.id === Number(id); })[0];
+    return { nome: p ? p.nome : 'Produto removido', qtd: porProduto[id] };
+  }).sort(function (a, b) { return b.qtd - a.qtd; }).slice(0, 6);
+  var maior = ranking.length ? ranking[0].qtd : 1;
+  document.getElementById('lista-barras').innerHTML = ranking.length ? ranking.map(function (r) {
+    return '<li><div class="barra-texto"><span>' + esc(r.nome) + '</span><strong>' + r.qtd + '</strong></div>' +
+      '<div class="barra-trilho"><div class="barra-valor" style="width:' + Math.round(r.qtd / maior * 100) + '%"></div></div></li>';
+  }).join('') : '<li class="dica">Ainda não há vendas.</li>';
+
+  // ----- Resumo do cardápio -----
+  var ativos = produtos.filter(function (p) { return Number(p.ativo) === 1; }).length;
+  var semFoto = produtos.filter(function (p) { return Number(p.ativo) === 1 && !p.imagem; }).length;
+  document.getElementById('resumo-cardapio').textContent =
+    ativos + ' produto(s) aparecendo no site, ' + (produtos.length - ativos) + ' desativado(s)' +
+    (semFoto ? ' e ' + semFoto + ' ainda sem foto.' : '.');
+
+  document.getElementById('restaurar').addEventListener('click', function () {
+    Admin.confirmar({
+      titulo: 'Restaurar dados de exemplo?',
+      texto: 'Todos os produtos, clientes e pedidos criados nesta demonstração serão apagados e os dados de exemplo voltarão.',
+      botao: 'Restaurar', perigo: true
+    }).then(function (ok) {
+      if (ok) { db.restaurarExemplo(); window.location.reload(); }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+/* ==========================================================
+   FORNINHO DA LILI — estilo da área administrativa
+   Carregado DEPOIS de ../assets/css/estilo.css, então usa as
+   mesmas cores, fontes e botões do site.
+   As partes 1 a 3 são o painel da demonstração original
+   (seção 10 do index.html antigo), agora funcional.
+   ========================================================== */
+
+/* ---------- 1. PAINEL (igual à demonstração) ---------- */
+.admin-corpo { min-height: 100vh; background: var(--marrom); color: var(--baunilha); }
+
+.admin-corpo :focus-visible { outline-color: var(--dourado); }
+.painel :focus-visible { outline-color: var(--rosa-forte); }
+
+.painel {
+  display: grid;
+  overflow: hidden;
+  border-radius: var(--raio);
+  background: var(--baunilha);
+  color: var(--marrom);
+}
+
+.painel-menu { display: flex; gap: .25rem; overflow-x: auto; padding: .75rem; background: var(--branco); border-bottom: 1px solid var(--linha); }
+
+.painel-menu a {
+  display: block;
+  padding: .4rem .6rem;
+  border-radius: .4rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--marrom-suave);
+  text-decoration: none;
+}
+
+.painel-menu a:hover { color: var(--rosa-forte); }
+
+.painel-menu .ativo { background: var(--rosa-claro); color: var(--rosa-forte); }
+
+.painel-menu .menu-separador { margin-top: auto; }
+
+.painel-corpo { min-width: 0; padding: clamp(1rem, 3vw, 1.75rem); }
+
+.painel-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; }
+
+.painel-topo h1 { font-size: 1.75rem; }
+
+.painel-topo .subtitulo { margin-top: .2rem; color: var(--marrom-suave); font-size: .9375rem; }
+
+.painel-topo-acoes { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+.metricas { display: grid; gap: .75rem; margin-top: 1.25rem; }
+
+.metricas div { padding: .85rem 1rem; border: 1px solid var(--linha); border-radius: var(--raio); background: var(--branco); }
+
+.metricas dt { font-size: .9375rem; color: var(--marrom-suave); }
+
+.metricas dd { font-family: var(--fonte-titulo); font-size: 1.75rem; font-weight: 600; line-height: 1.2; }
+
+.painel-grade { display: grid; gap: 1.25rem; margin-top: 1.25rem; }
+
+.bloco { min-width: 0; padding: 1rem; border: 1px solid var(--linha); border-radius: var(--raio); background: var(--branco); }
+
+.bloco-topo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; margin-bottom: .5rem; }
+
+.bloco h2 { font-size: 1.125rem; }
+
+.bloco-topo a { font-size: .9375rem; font-weight: 600; color: var(--rosa-forte); text-underline-offset: 3px; }
+
+/* ---------- 2. TABELAS (no celular cada linha vira um cartão) ---------- */
+.tabela { width: 100%; border-collapse: collapse; }
+
+.tabela th { font-size: .875rem; font-weight: 700; text-align: left; color: var(--marrom-suave); }
+
+.tabela thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+.tabela tr { display: block; padding-block: .75rem; border-bottom: 1px solid var(--linha); }
+
+.tabela tbody tr:last-child { border-bottom: 0; }
+
+.tabela td { display: flex; justify-content: space-between; gap: 1rem; padding-block: .1rem; }
+
+.tabela td::before { content: attr(data-rotulo); color: var(--marrom-suave); }
+
+.tabela .td-nome { justify-content: flex-start; align-items: center; gap: .65rem; font-weight: 600; line-height: 1.3; }
+.tabela .td-nome::before { content: none; }
+.tabela .td-nome > span { display: flex; align-items: center; gap: .65rem; }
+
+.td-sub { display: block; font-size: .875rem; font-weight: 400; color: var(--marrom-suave); }
+
+.miniatura { flex: none; width: 2.75rem; height: 2.75rem; border-radius: .4rem; object-fit: cover; }
+
+.miniatura-vazia { display: inline-block; background: var(--rosa-claro); }
+
+.tabela .td-acoes { flex-wrap: wrap; justify-content: flex-start; gap: .5rem; margin-top: .5rem; }
+.tabela .td-acoes::before { content: none; }
+
+.tabela td[data-rotulo] { white-space: nowrap; }
+.tabela td.td-quebra { white-space: normal; text-align: right; }
+
+.tabela-vazia { padding: 1.5rem 0; color: var(--marrom-suave); text-align: center; }
+
+.linha-inativa .td-nome { color: var(--marrom-suave); }
+.linha-inativa .miniatura { opacity: .45; }
+
+/* Etiquetas de status */
+.status { display: inline-block; padding: .05rem .55rem; border-radius: 999px; font-size: .875rem; font-weight: 700; background: #E3F1E7; color: #2F6B45; }
+.status-inativo, .status-cancelado { background: #EEE7E3; color: var(--marrom-suave); }
+.status-novo { background: var(--rosa-claro); color: var(--rosa-forte); }
+.status-em-preparo { background: #FBF0D4; color: #7A5A00; }
+.status-pronto { background: #E1ECF7; color: #24527A; }
+
+/* Barras de vendas por item */
+.barras { display: grid; gap: .8rem; }
+
+.barra-texto { display: flex; justify-content: space-between; gap: 1rem; font-size: .9375rem; }
+
+.barra-texto strong { font-weight: 700; }
+
+.barra-trilho { height: .5rem; margin-top: .2rem; border-radius: 999px; background: var(--rosa-claro); }
+
+.barra-valor { height: 100%; border-radius: 999px; background: var(--rosa); }
+
+/* ---------- 3. CABEÇALHO DO PAINEL ---------- */
+.admin-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1rem;
+  width: min(100% - 2.5rem, 80rem);
+  margin-inline: auto;
+  padding-block: .9rem;
+}
+
+.admin-topo .logo { color: var(--baunilha); }
+
+.admin-topo .logo-papel { margin-left: .5rem; padding-left: .75rem; border-left: 1px solid rgba(255, 248, 246, .3); font-size: .9375rem; font-weight: 600; color: #E6D9D3; }
+
+.admin-usuario { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; font-size: .9375rem; }
+
+.admin-usuario a { color: var(--baunilha); font-weight: 600; text-underline-offset: 3px; }
+
+.admin-corpo .botao-sair { border-color: var(--baunilha); background: transparent; color: var(--baunilha); }
+.admin-corpo .botao-sair:hover { background: var(--baunilha); color: var(--marrom); }
+
+.admin-app { width: min(100% - 2.5rem, 80rem); margin: 0 auto 2.5rem; }
+
+/* ---------- 4. FILTROS, FORMULÁRIOS E AVISOS ---------- */
+.ferramentas { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; margin-top: 1.25rem; }
+
+.ferramentas label { display: grid; gap: .2rem; font-size: .9375rem; font-weight: 600; }
+
+.ferramentas .campo-busca { flex: 1 1 14rem; }
+
+.admin-corpo input,
+.admin-corpo select,
+.admin-corpo textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: .55rem .8rem;
+  border: 1px solid #A8948A;
+  border-radius: .5rem;
+  background: var(--branco);
+  color: var(--marrom);
+  font: inherit;
+}
+
+.admin-corpo input[type="checkbox"] { width: 1.25rem; min-height: 0; height: 1.25rem; padding: 0; accent-color: var(--rosa-forte); }
+
+.admin-corpo textarea { min-height: 6rem; resize: vertical; }
+
+.form-admin { display: grid; gap: 1.1rem; max-width: 46rem; margin-top: 1.25rem; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--linha); border-radius: var(--raio); background: var(--branco); }
+
+.form-admin fieldset { display: grid; gap: 1rem; margin: 0; padding: 0; border: 0; }
+
+.form-admin legend { margin-bottom: .25rem; padding: 0; font-family: var(--fonte-titulo); font-size: 1.125rem; font-weight: 600; }
+
+.campo { display: grid; gap: .25rem; }
+
+.campo > label, .campo > .rotulo { font-weight: 600; }
+
+.obrigatorio { color: var(--rosa-forte); }
+
+.dica { font-size: .875rem; color: var(--marrom-suave); }
+
+.campos-lado { display: grid; gap: 1rem; }
+
+.opcao { display: flex; align-items: center; gap: .6rem; font-weight: 600; cursor: pointer; }
+
+.form-acoes { display: flex; flex-wrap: wrap; gap: .75rem; padding-top: .5rem; border-top: 1px solid var(--linha); }
+
+.foto-campo { display: grid; gap: 1rem; align-items: start; }
+
+.previa { width: 8rem; height: 8rem; border: 1px solid var(--linha); border-radius: var(--raio); object-fit: cover; background: var(--rosa-claro); }
+
+.previa-vazia { display: grid; place-items: center; padding: .5rem; color: var(--marrom-suave); font-size: .875rem; text-align: center; }
+
+.aviso { margin-top: 1rem; padding: .75rem 1rem; border-left: 4px solid #2F6B45; border-radius: .4rem; background: #E3F1E7; color: #1F4A2F; font-weight: 600; }
+.aviso-erro { border-left-color: var(--rosa-forte); background: var(--rosa-claro); color: var(--rosa-hover); }
+
+.erro-campo { color: var(--rosa-hover); font-size: .875rem; font-weight: 600; }
+
+/* Itens do pedido */
+.itens-pedido { display: grid; gap: .75rem; }
+
+.item-pedido { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem .75rem; align-items: end; padding: .75rem; border: 1px solid var(--linha); border-radius: .5rem; background: var(--baunilha); }
+
+.item-pedido .campo-produto { grid-column: 1 / -1; }
+
+.item-pedido .subtotal { font-weight: 700; color: var(--rosa-forte); }
+
+.total-pedido { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-size: 1.125rem; }
+
+.total-pedido strong { font-family: var(--fonte-titulo); font-size: 1.5rem; }
+
+.rodape-tabela { margin-top: .75rem; font-size: .9375rem; color: var(--marrom-suave); }
+
+.zona-demo { margin-top: 2rem; padding-top: 1rem; border-top: 1px dashed var(--linha); font-size: .9375rem; color: var(--marrom-suave); }
+
+.zona-demo button { margin-top: .5rem; }
+
+/* Botão de perigo (excluir) */
+.botao-perigo { border-color: var(--rosa-hover); background: var(--rosa-hover); }
+.botao-perigo:hover { border-color: #7A2444; background: #7A2444; }
+
+/* ---------- 5. CAIXA DE CONFIRMAÇÃO ---------- */
+.dialogo {
+  width: min(100% - 2rem, 28rem);
+  padding: 1.5rem;
+  border: 0;
+  border-radius: var(--raio);
+  background: var(--branco);
+  color: var(--marrom);
+  box-shadow: 0 1.5rem 3rem rgba(74, 59, 50, .3);
+}
+
+.dialogo::backdrop { background: rgba(74, 59, 50, .55); }
+
+.dialogo h2 { font-size: 1.375rem; }
+
+.dialogo p { margin-top: .6rem; color: var(--marrom-suave); }
+
+.dialogo .form-acoes { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+
+/* ---------- 6. TELA DE LOGIN ---------- */
+.login-pagina { display: grid; place-items: center; padding: 1.5rem 1.25rem; }
+
+.login-caixa { width: min(100%, 24rem); }
+
+.login-caixa .logo { justify-content: center; width: 100%; margin-bottom: 1.25rem; color: var(--baunilha); }
+
+.login-caixa .logo-selo { width: 3.25rem; height: 3.25rem; }
+
+.login-form { display: grid; gap: 1rem; padding: clamp(1.25rem, 5vw, 2rem); border-radius: var(--raio); background: var(--baunilha); color: var(--marrom); }
+
+.login-form h1 { font-size: 1.625rem; }
+
+.login-form .intro { margin-top: -.5rem; font-size: .9375rem; }
+
+.login-form .botao { width: 100%; }
+
+.campo-senha { position: relative; }
+
+.campo-senha input { padding-right: 4.75rem; }
+
+.mostrar-senha {
+  position: absolute;
+  top: 50%;
+  right: .35rem;
+  min-height: 2.25rem;
+  padding: 0 .6rem;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: .4rem;
+  background: transparent;
+  color: var(--rosa-forte);
+  font: inherit;
+  font-size: .875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mostrar-senha:hover { background: var(--rosa-claro); }
+
+.login-demo { margin-top: 1rem; font-size: .875rem; text-align: center; color: #E6D9D3; }
+
+.login-demo code { padding: .05rem .35rem; border-radius: .3rem; background: rgba(255, 248, 246, .12); color: var(--baunilha); font-size: .9375rem; }
+
+.login-voltar { display: block; margin-top: .75rem; text-align: center; font-size: .9375rem; color: var(--baunilha); }
+
+/* ---------- 7. TABLET (760px) ---------- */
+@media (min-width: 47.5em) {
+  .metricas { grid-template-columns: repeat(3, 1fr); }
+
+  .tabela thead { position: static; width: auto; height: auto; clip-path: none; display: table-header-group; }
+
+  .tabela tr { display: table-row; padding: 0; }
+
+  .tabela th, .tabela td { display: table-cell; padding: .6rem .75rem .6rem 0; border-bottom: 1px solid var(--linha); vertical-align: middle; }
+
+  .tabela tbody tr:last-child td { border-bottom: 0; }
+
+  .tabela td::before { content: none; }
+
+  .tabela td.td-quebra { text-align: left; }
+
+  .tabela .td-acoes { margin-top: 0; padding-right: 0; white-space: nowrap; }
+
+  .tabela .td-acoes .botao + .botao { margin-left: .35rem; }
+
+  .campos-lado { grid-template-columns: 1fr 1fr; }
+
+  .foto-campo { grid-template-columns: auto 1fr; }
+
+  .item-pedido { grid-template-columns: 1fr 6rem 8rem auto auto; }
+
+  .item-pedido .campo-produto { grid-column: auto; }
+}
+
+/* ---------- 8. COMPUTADOR (1024px) ---------- */
+@media (min-width: 64em) {
+  .painel { grid-template-columns: 12rem 1fr; min-height: calc(100vh - 7rem); }
+
+  .painel-menu { display: flex; flex-direction: column; padding: 1rem .75rem; border-bottom: 0; border-right: 1px solid var(--linha); }
+
+  .painel-grade-2 { grid-template-columns: 1.4fr 1fr; align-items: start; }
+
+  .barras-largas { grid-template-columns: repeat(2, 1fr); gap: .9rem 2.5rem; }
+}
