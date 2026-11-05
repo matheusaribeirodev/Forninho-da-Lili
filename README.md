@@ -194,7 +194,7 @@ Projeto desenvolvido no curso de **Análise e Desenvolvimento de Sistemas — SE
 | Nome | GitHub |
 |---|---|
 | Matheus Augusto Ribeiro | [@matheusaribeirodev](https://github.com/matheusaribeirodev) |
-| [Nome 2] | [@usuario] |
+| Joãpo Silva Torres | [@Joaotorresdev](https://https://github.com/joaotorresdev)|
 | [Nome 3] | [@usuario] |
 | [Nome 4] | [@usuario] |
 
